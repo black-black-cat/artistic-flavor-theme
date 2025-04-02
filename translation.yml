@@ -13,7 +13,7 @@ components:
   - name: merchant
     target_languages: [cs, da, de, es, fi, fr, it, ja, ko, nb, nl, pl, pt-BR, pt-PT, sv, th, tr, zh-CN, zh-TW]
     audience: merchant
-    scheme: 'apps-and-themes'
+    scheme: 'apps-and-themes' 
     owners: ['@Shopify/themes-translations']
     paths:
       - locales/{{language}}.schema.json

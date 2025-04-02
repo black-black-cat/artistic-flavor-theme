@@ -51,10 +51,41 @@
   endif
 -%}
 
+{%- if section.settings.color_scheme == 'scheme-adventure' -%}
+  {%- style -%}
+    #Banner-{{ section.id }} .banner__box {
+      background: linear-gradient(45deg, #FF6B6B, #FFD93D, #6BCB77, #4D96FF);
+      color: #FFFFFF;
+    }
+    #Banner-{{ section.id }} .banner__heading {
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+    #Banner-{{ section.id }} .button--primary {
+      background-color: #FF6B6B;
+      border-color: #FF6B6B;
+      color: #FFFFFF;
+    }
+    #Banner-{{ section.id }} .button--primary:hover {
+      background-color: #e05252;
+      border-color: #e05252;
+    }
+    #Banner-{{ section.id }} .button--secondary {
+      background-color: transparent;
+      border-color: #FFFFFF;
+      color: #FFFFFF;
+    }
+     #Banner-{{ section.id }} .button--secondary:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    /* Add other adventure scheme styles here */
+  {%- endstyle -%}
+{%- endif -%}
+
 <div
   id="Banner-{{ section.id }}"
-  class="banner banner--content-align-{{ section.settings.desktop_content_alignment }} banner--content-align-mobile-{{ section.settings.mobile_content_alignment }} banner--{{ section.settings.image_height }}{% if section.settings.stack_images_on_mobile and section.settings.image != blank and section.settings.image_2 != blank %} banner--stacked{% endif %}{% if section.settings.image_height == 'adapt' and section.settings.image != blank %} banner--adapt{% endif %}{% if section.settings.show_text_below %} banner--mobile-bottom{%- endif -%}{% if section.settings.show_text_box == false %} banner--desktop-transparent{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}"
+  class="banner banner--content-align-{{ section.settings.desktop_content_alignment }} banner--content-align-mobile-{{ section.settings.mobile_content_alignment }} banner--{{ section.settings.image_height }}{% if section.settings.stack_images_on_mobile and section.settings.image != blank and section.settings.image_2 != blank %} banner--stacked{% endif %}{% if section.settings.image_height == 'adapt' and section.settings.image != blank %} banner--adapt{% endif %}{% if section.settings.show_text_below %} banner--mobile-bottom{%- endif -%}{% if section.settings.show_text_box == false %} banner--desktop-transparent{% endif %}{% if section.settings.enable_parallax %} banner--parallax{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %} color-{{ section.settings.color_scheme }}"
 >
+  <!-- Placeholder for potential 3D elements -->
   {%- if section.settings.image != blank -%}
     <div class="banner__media media{% if section.settings.image == blank and section.settings.image_2 == blank %} placeholder{% endif %}{% if section.settings.image_2 != blank %} banner__media-half{% endif %}{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }}{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">
       {%- liquid
@@ -166,6 +197,10 @@
   </div>
 </div>
 
+{%- if section.settings.enable_parallax -%}
+  <script src="{{ 'section-image-banner.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
+
 {% schema %}
 {
   "name": "t:sections.image-banner.name",
@@ -244,6 +279,13 @@
       "label": "t:sections.all.animation.image_behavior.label"
     },
     {
+      "type": "checkbox",
+      "id": "enable_parallax",
+      "default": false,
+      "label": "t:sections.image-banner.settings.enable_parallax.label",
+      "info": "t:sections.image-banner.settings.enable_parallax.info"
+    },
+    {
       "type": "header",
       "content": "t:sections.image-banner.settings.content.content"
     },
@@ -318,9 +360,17 @@
       "label": "t:sections.image-banner.settings.show_text_box.label"
     },
     {
-      "type": "color_scheme",
+      "type": "select",
       "id": "color_scheme",
       "label": "t:sections.all.colors.label",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" },
+        { "value": "scheme-adventure", "label": "Adventure Scheme (Custom)" }
+      ],
       "default": "scheme-1"
     },
     {
@@ -332,7 +382,7 @@
       "id": "stack_images_on_mobile",
       "default": true,
       "label": "t:sections.image-banner.settings.stack_images_on_mobile.label"
-    },    
+    },
     {
       "type": "select",
       "id": "mobile_content_alignment",
@@ -441,8 +491,8 @@
       "limit": 1,
       "settings": [
         {
-        "type": "header",
-        "content": "t:sections.image-banner.blocks.buttons.settings.header_1.content"
+          "type": "header",
+          "content": "t:sections.image-banner.blocks.buttons.settings.header_1.content"
         },
         {
           "type": "text",
@@ -463,8 +513,8 @@
           "label": "t:sections.image-banner.blocks.buttons.settings.button_style_secondary_1.label"
         },
         {
-        "type": "header",
-        "content": "t:sections.image-banner.blocks.buttons.settings.header_2.content"
+          "type": "header",
+          "content": "t:sections.image-banner.blocks.buttons.settings.header_2.content"
         },
         {
           "type": "text",
@@ -505,3 +555,19 @@
   ]
 }
 {% endschema %}
+
+{%- comment -%}
+  Add translations for the new settings
+  In locales/en.default.json (and other language files):
+  "sections": {
+    "image-banner": {
+      "settings": {
+        ... existing settings ...
+        "enable_parallax": {
+          "label": "Enable parallax effect",
+          "info": "Gives a subtle depth effect on scroll. May impact performance slightly. Works best with 'Image height' set to Small, Medium, or Large."
+        }
+      }
+    }
+  }
+{%- endcomment -%}
